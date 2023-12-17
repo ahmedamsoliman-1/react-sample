@@ -4,8 +4,9 @@ import axios from 'axios';
 
 
 
-const Backend_URL = 'http://192.168.0.175:5000';
+// const Backend_URL = 'http://192.168.0.175:5000';
 // const Backend_URL = 'http://localhost:5000';
+
 
 function App() {
   const [username, setUsername] = useState('');
@@ -15,21 +16,23 @@ function App() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`${Backend_URL}/login`, {
+      const response = await axios.post('http://localhost:5000/login', {
         username,
         password,
       });
-      setToken(response.data.token);
+      const authToken = response.data.token;
+      setToken(authToken);
+      localStorage.setItem('authToken', authToken); // Store token in localStorage
     } catch (error) {
       console.error('Login error:', error);
     }
   };
 
-  const fetchUserData = async (token) => {
+  const fetchUserData = async (authToken) => {
     try {
-      const response = await axios.get(`${Backend_URL}/data`, {
+      const response = await axios.get('http://localhost:5000/data', {
         headers: {
-          Authorization: token,
+          Authorization: authToken,
         },
       });
       setUserData(response.data);
@@ -41,13 +44,16 @@ function App() {
   const handleLogout = () => {
     setToken('');
     setUserData(null);
+    localStorage.removeItem('authToken'); // Remove token from localStorage on logout
   };
 
   useEffect(() => {
-    if (token) {
-      fetchUserData(token);
+    const storedToken = localStorage.getItem('authToken');
+    if (storedToken) {
+      setToken(storedToken);
+      fetchUserData(storedToken);
     }
-  }, [token]);
+  }, []);
 
   return (
     <div className="App">

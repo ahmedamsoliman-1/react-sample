@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
 
+
+
+const Backend_URL = 'http://192.168.0.175:5000';
+// const Backend_URL = 'http://localhost:5000';
+
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -10,7 +15,7 @@ function App() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/login', {
+      const response = await axios.post(`${Backend_URL}/login`, {
         username,
         password,
       });
@@ -22,7 +27,7 @@ function App() {
 
   const fetchUserData = async (token) => {
     try {
-      const response = await axios.get('http://localhost:5000/data', {
+      const response = await axios.get(`${Backend_URL}/data`, {
         headers: {
           Authorization: token,
         },

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
 import Navbar from './Navbar';
+import ActiveSessions from './components/Sessions';
 
 function App() {
   const [username, setUsername] = useState('');
@@ -53,8 +54,11 @@ function App() {
   }, []);
 
   return (
+    <>
+    <Navbar handleLogout={handleLogout} loggedIn={!!token} />
+    
     <div className="App">
-      <Navbar handleLogout={handleLogout} loggedIn={!!token} />
+      
       {!token ? (
         <div className="login-container">
           <form className="login-form" onSubmit={handleLogin}>
@@ -64,13 +68,13 @@ function App() {
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-            />
+              />
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-            />
+              />
             <button type="submit">Login</button>
           </form>
         </div>
@@ -83,7 +87,9 @@ function App() {
           </div>
         </div>
       )}
+      <ActiveSessions /> {/* Render ActiveSessions component */}
     </div>
+    </>
   );
 }
 
